@@ -34,6 +34,7 @@ class Model_Entry extends Model_Backbone {
 	public function read_all($from = NULL, $to = NULL)
 	{
 		$data = array();
+
 		$entries = $this->where('user_id', '=', Auth::instance()->get_user()->id)
 			->offset($from)
 			->limit($to)
@@ -43,6 +44,7 @@ class Model_Entry extends Model_Backbone {
 		{
 			$data[] = $model->as_array();
 		}
+
 		return $data;
 	}
 
@@ -94,7 +96,7 @@ class Model_Entry extends Model_Backbone {
 
 		if( ! is_numeric($values['expires']))
 		{
-			$new_values['expires'] = '1970-01-01'; // Never
+			$new_values['expires'] = '0000-00-00'; // Never
 		}
 		else
 		{
@@ -241,7 +243,7 @@ class Model_Entry extends Model_Backbone {
 		$date = $this->expires;
 		$expires = '';
 		
-		if($date === '1970-01-01')
+		if($date === '0000-00-00')
 		{
 			$expires = '&#8734;';
 		}

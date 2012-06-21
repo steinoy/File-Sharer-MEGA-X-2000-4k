@@ -4,10 +4,10 @@
 
 !admins-example.php
 !allowed_extensions-example.php
-!auth.php
+!auth-example.php
 !database-example.php
 !facebook-example.php
-!general.php
+!general-example.php
 
 !/menu/
 !menu/*

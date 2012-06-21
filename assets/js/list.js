@@ -88,11 +88,9 @@ EntryModel = Backbone.Model.extend({
     /**
      * TODO: Upload files recursively.
      * 
-     * Custom ajax call for uploading the files that has been added.
-     * 
      * @return {mixed}
      */
-    uploadFiles: function (xhrCallback) {
+    uploadFiles: function (xhrCallback, filesToExclude) {
         if(_.isEmpty(this.files)) {
             return false;
         } else {
@@ -105,16 +103,14 @@ EntryModel = Backbone.Model.extend({
         formData.append('title', this.get('title'));
         formData.append('expires', this.get('expires'));
 
-        var deleteList = this.get('deleteList');
-
         for (var i=0; i < filesToUpload.length; i++) {
-            if($.inArray(filesToUpload[i].fileName, deleteList) === -1) {
-                formData.append(filesToUpload[i].fileName, filesToUpload[i]);
+            if($.inArray(filesToUpload[i].name, filesToExclude) === -1) {
+                formData.append(filesToUpload[i].name, filesToUpload[i]);
             }
         }
 
-        for (var i=0; i < deleteList.length; i++) {
-            formData.append('delete_list[]', deleteList[i]);
+        for (var i=0; i < filesToExclude.length; i++) {
+            formData.append('delete_list[]', filesToExclude[i]);
         }
 
         this.files = [];
@@ -171,7 +167,7 @@ EntryView = Backbone.View.extend({
         'click .select-more-files': 'openFileBrowser',
         'click .single-file': 'toggleFileSelect',
         'change .file-browser': 'handleFilesFromBrowser',
-        'blur input': 'updateInput'
+        //'blur input': 'updateInput'
     },
 
     /**
@@ -180,7 +176,7 @@ EntryView = Backbone.View.extend({
      * @constructs
      */
     initialize: function () {
-        this.model.bind('change:fileNames', this.render, this);
+        this.model.bind('change', this.render, this);
         this.model.bind('destroy', this.onModelDestroy, this);
 
         // Add hover classes, CSS :hover leaves it in hover state on close.
@@ -205,13 +201,12 @@ EntryView = Backbone.View.extend({
      * 
      * @return {EntryView}
      */
-    render: function () {
+    render: function (before, after) {
         var attrs = this.model.toJSON();
 
         attrs.filesMarkup = '';
 
         for (var i = this.model.files.length - 1; i >= 0; i--) {
-            //attrs.fileNames.push(this.model.files[i].fileName);
             if($.inArray(this.model.files[i].fileName, attrs.deleteList) != -1) {
                 var toDelete = true;
             } else {
@@ -219,7 +214,7 @@ EntryView = Backbone.View.extend({
             }
 
             attrs.filesMarkup += this.fileTemplate({
-                fileName : this.model.files[i].fileName,
+                fileName : this.model.files[i].name,
                 toBeDeleted: toDelete,
                 uploaded: false
             });
@@ -278,7 +273,8 @@ EntryView = Backbone.View.extend({
      */
     save: function () {
         var that = this;
-        $('.date', this.el).append('<div class="spinner">');
+
+        var oldDeleteList = this.model.get('deleteList');
 
         this.model.save(
             {
@@ -287,9 +283,6 @@ EntryView = Backbone.View.extend({
             },
             {
                 success: function(model, response) {
-                    $('.spinner', that.el).remove();
-                    that.render();
-
                     try {
                         that.model.uploadFiles(function() {
                             var xhr = new window.XMLHttpRequest();
@@ -302,13 +295,12 @@ EntryView = Backbone.View.extend({
                             }, false);
 
                             return xhr;
-                        });
+                        }, oldDeleteList);
                     } catch(e) {
                         new Error('Something went wrong: '+e);
                     }
                 },
                 error: function (model, response) {
-                    $('.spinner', that.el).remove();
                     new Error('Something went wrongs: '+response.responseText);
                 }
             }
@@ -324,15 +316,11 @@ EntryView = Backbone.View.extend({
      */
     delete: function () {
         var that = this;
-        $('.date', this.el).append('<div class="spinner">');
 
         this.model.destroy({
             success: function (model, response) {
-                $('.spinner', that.el).remove();
             },
             error: function (model, response) {
-                $('.spinner', that.el).remove();
-                console.log('deleteError');
             }
         });
 

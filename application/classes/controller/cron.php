@@ -13,7 +13,7 @@ class Controller_Cron extends Controller {
 	  
 	  $entries = ORM::factory('entry')
 			->where('expires', '<=', $now)
-			->and_where('expires', '!=', '1970-01-01')
+			->and_where('expires', '!=', '0000-00-00')
 			->find_all()
 			->as_array();
 			
