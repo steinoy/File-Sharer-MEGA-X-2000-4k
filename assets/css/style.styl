@@ -1,0 +1,511 @@
+@import 'vendor-prefix'
+
+@import 'reset'
+
+@import 'colors'
+
+html
+  overflow-y: scroll;
+
+body
+  background: white
+  width: 100%
+  height: 100%
+
+h2
+  font-family: 'Helvetica Neue',Arial,sans-serif
+  font-weight: bold
+  font-size: 27px
+  margin: 0 0 31px 0
+
+h2.first
+  margin-top: -7px
+
+h3
+  font-family: 'Helvetica Neue',Arial,sans-serif
+  font-weight: bold
+  font-size: 22px
+  margin: 0 0 31px 0
+
+p
+  font-size: 14px
+  line-height: 22px
+
+a,a:visited
+  font-weight: bold
+  text-decoration: none
+  color: black
+
+a:hover
+  color: green
+
+#wrap
+  width: 600px
+  margin: auto
+  margin-top: 140px
+  padding: 0 20px
+
+.full-width
+  width: 100%
+  float: left
+  margin-bottom: 20px
+
+input::-webkit-input-placeholder
+  color: darkgray
+
+.message
+  position: absolute
+  top: 0
+  font-size: 12px
+  color: white
+  background: black
+  padding: 10px 10px 10px 10px
+
+.submit, .submit:visited, .submit:valid
+  font-size: 12px
+  color: white
+  text-decoration: none
+  padding: 8px 10px
+  background: black
+  border: none
+  display: inline
+  margin-right: 16px
+  font-weight: normal
+
+.submit:hover
+  background: green
+  color: white
+  cursor: pointer
+
+.description
+  color: darkgray
+  font-size: 12px
+
+.simple-field
+  border: none
+  border-bottom: 1px solid gray
+  height: 40px
+  font-size: 27px
+  font-family: 'Helvetica Neue',Arial,sans-serif
+  font-weight: bold
+  background: white
+
+  &:focus
+    outline: none
+
+.shy-button, .shy-button:visited, .shy-button a
+  font-weight: normal
+  color: darkgray
+  display: inline
+  font-size: 13px
+  text-decoration: none
+
+  &:hover
+    color: green
+    cursor: pointer
+
+#menu
+  position: absolute
+  top: 15px
+  right: 15px
+
+  ul
+    float: left
+  
+    li
+      float: left
+
+    a
+      padding: 10px
+
+#list-entries
+  list-style: none
+  padding: 0
+  margin: 0 0 200px 0
+
+.list-entry
+  border-top: 1px solid gray
+  padding: 20px 0 58px 0
+  display: block
+  float: left
+  color: black
+  text-decoration: none
+  position: relative
+
+  &.hover.active
+    cursor auto
+    color black
+
+    input
+      cursor auto
+      color black
+
+    .left .date
+      background-color: black
+
+  &.hover
+    color: green
+    cursor: pointer
+
+    input
+      color green
+      cursor pointer
+
+    .left .date
+      background-color: green
+
+  .entry-content
+    display: none
+
+  &.active .entry-content
+    display: block
+
+  .title
+    margin-top: -2px
+    font-family: 'Helvetica Neue',Arial,sans-serif
+    font-size: 22px
+    font-weight: bold
+    margin-bottom: 5px
+
+  input
+    background: none
+    padding: 0
+    border: none
+    border-bottom: 1px solid white
+    color: black
+
+    &:focus
+      outline: none
+
+  &.active input
+      border-color gray
+
+  .meta
+    margin: 0
+    padding: 0
+
+  .expiration
+    font-weight: bold
+    text-align: center
+    width: 20px
+
+  .left
+    width: 60px
+    height: 60px
+    margin-right: 40px
+    float: left
+
+    .date
+      background-color: black
+      height: 60px
+      width: 60px
+      border-radius: 30px
+      color: white
+      font-size: 13px
+      text-align: center
+      line-height: 60px
+      font-family: 'Helvetica Neue',Arial,sans-serif
+      font-weight: normal
+
+  .tmp-upload
+    color: darkgray
+    text-align: center
+    margin-top: 10px
+    font-size: 9px
+
+  .right
+    width: 500px
+    float: left
+
+  .submit-wrap
+    width: 100%
+    margin-top: 40px
+    display: block
+    float: left
+
+  .the-files
+    padding: 0 0 0 0
+    margin: 20px 0 0 0
+
+  .single-file
+    list-style: none
+    height: 20px
+    background: url("../gfx/list.png") no-repeat left -40px
+    padding: 3px 0 0 20px
+    margin-bottom: 8px
+    opacity: .31
+
+    &.uploaded
+      opacity: 1
+
+  .single-file.to-be-deleted
+    color: red
+    background-position: left -80px
+
+  .single-file a
+    text-decoration: none
+    color: black
+
+  .single-file:hover,.single-file:hover a
+    cursor: pointer
+
+  .single-file.to-delete
+    opacity: .31
+
+  .the-URI
+    float: left
+    padding: 5px 8px
+    margin-top: 22px
+    font-size: 15px
+    color: #ababab
+    overflow: hidden
+    width: 200px
+    border: 1px solid #eee
+
+  .the-URI:hover
+    cursor: text
+
+  .select-more-files
+    background: url("../gfx/list.png") no-repeat left -100px
+    padding: 3px 0 0 20px
+
+    &:hover
+      background-position: left -120px
+
+  .delete
+    display: none
+    position: absolute
+    right: 0
+    top: 20px
+    background: url("../gfx/list.png") no-repeat left top
+    height: 19px
+    width: 19px
+
+    &:hover
+      background-position: left -20px
+      cursor: pointer
+
+.append-more-entries
+    float: left
+    margin-top: 12px
+    margin-left: 100px
+    display: none
+
+.uploading .delete,.uploading .delete:hover
+  opacity: .3
+  background-position: left top
+
+.upload,.upload:visited
+  border-top: 1px solid black
+  padding: 24px 0 16px 0
+  margin-bottom: 60px
+  float: left
+  display: block
+  width: 600px
+  height: 80px
+  text-decoration: none
+  color: black
+
+.upload:hover,.upload.hover,.upload:hover .shy-button
+  color: green
+  cursor: pointer
+
+.upload:hover .left,.upload.hover .left
+  background-position: left 0
+
+.upload
+  .left
+    width: 100px
+    height: 80px
+    float: left
+    background: url("../gfx/list_large_document.png") no-repeat left -80px
+
+  .right
+    width: 500px
+    float: left
+
+  h2
+    margin: -6px 0 10px 0
+
+.file-browser,.dropbox-file-browser
+  width: 0
+  height: 0
+  overflow: hidden
+
+.login-actions
+  position: relative
+  width: 100%
+  text-align: center
+  
+  .submit
+    margin-right: 0
+    text-transform: uppercase
+    font-size: 13px
+    font-weight: normal
+
+    &:hover
+      background-color: green
+      color: white
+
+.create
+  .simple-field
+    margin-bottom: 20px
+
+  .submit
+    margin-top: 22px
+
+  form .error
+    font-size: 11px
+    height: 13px
+    margin-top: -15px
+
+.user-delete
+  
+  .submit
+    margin-top: 22px
+
+.users
+  list-style: none
+  padding: 0
+  margin: 13px 0 0 0
+
+  .user
+    border-top: 1px solid gray
+    float: left
+    width: 100%
+
+    .link, .link:visited
+      padding: 11px 0 31px 0
+      width: 400px
+      display: block
+      float: left
+      color: black
+      text-decoration: none
+
+      &:hover
+        color: green
+
+    .actions
+      float: right
+      padding-top: 12px
+
+      a
+        display: block
+        text-indent: 999px
+        overflow: hidden
+        background: url("../gfx/admin_user.png") no-repeat
+        float: left
+        margin-left: 15px
+
+      .edit
+        width: 20px
+        height: 20px
+        margin-top: 1px
+        background-position: 0 0
+
+        &:hover
+          background-position: 0 -20px
+
+      .user-delete
+        width: 20px
+        height: 20px
+        background-position: 0 -40px
+
+        &:hover
+          background-position: 0 -60px
+
+#user
+
+  .user-title
+    margin-top: -2px
+    font-family: 'Helvetica Neue',Arial,sans-serif
+    font-size: 27px
+    font-weight: bold
+    float: left
+    width: 100%
+    margin-bottom: 0px
+    margin-top: 10px
+
+  .user-edit-actions
+    float: left
+    margin-top: 40px
+    width: 100%
+
+  .option-section
+    float: left
+    width: 280px
+
+    .entry
+      margin-bottom: 15px
+      float: left
+      width: 100%
+
+  .option-title
+    font-size: 18px
+    border-top: 1px solid black
+    padding-top: 10px
+    margin-bottom: 15px
+
+#error
+  width: 300px
+  position: fixed
+  left: 50%
+  margin-left: -150px
+  top: 140px
+
+  h2
+    font-size: 24px
+    margin: 0 0 5px 0
+    float: left
+    width: 100%
+
+  .error-message
+    border: 1px dashed gray
+    padding: 10px
+    float: left
+    width: 100%
+
+#view-all
+  
+  .entry
+    padding-left: 0
+    float: left
+    width: 100%
+
+    .dl
+      list-style: none
+      height: 20px
+      background: url("../gfx/view.png") no-repeat left -60px
+      padding: 3px 0 0 24px
+      margin-bottom: 8px
+      font-weight: normal
+
+      &:hover
+        color: green
+        background-position: left -80px
+
+  .preview-link
+    float: left
+    width: 20px
+    height: 20px
+    display: block
+    margin-right: 5px
+    background: url("../gfx/view.png") no-repeat left -2px
+    padding: 0
+
+    &:hover
+      background-position: left -22px
+
+    &.empty, &:hover
+      background-position: left -42px
+
+#preview
+  position: absolute
+  left: 50%
+  top: 50%
+
+#preview-overlay
+  width: 100%
+  height: 100%
+  position: absolute
+  background: url("../gfx/close.png") no-repeat 10px 10px
