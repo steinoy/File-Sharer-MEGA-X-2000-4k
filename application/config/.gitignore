@@ -2,11 +2,12 @@
 
 !.gitignore
 
-!.admins-example.php
-!.allowed_extensions-example.php
-!.auth.php
-!.database-example.php
-!.facebook-example.php
-!.general.php
+!admins-example.php
+!allowed_extensions-example.php
+!auth.php
+!database-example.php
+!facebook-example.php
+!general.php
 
-!.menu
+!/menu/
+!menu/*
