@@ -90,7 +90,7 @@ EntryModel = Backbone.Model.extend({
      * 
      * @return {mixed}
      */
-    uploadFiles: function (xhrCallback, filesToExclude) {
+    uploadFiles: function (errorCallback, xhrCallback, filesToExclude) {
         if(_.isEmpty(this.files)) {
             return false;
         } else {
@@ -129,11 +129,11 @@ EntryModel = Backbone.Model.extend({
                 that.save();
 
                 if(data.status === 'error') {
-                    throw data.message;
+                    errorCallback(data.message);
                 }
             },
             error: function (data) {
-                throw data.statusText;
+                errorCallback(data.statusText);
             }
         });
 
@@ -171,7 +171,7 @@ EntryView = Backbone.View.extend({
     },
 
     /**
-     * Expects a entry model to be sent along on initialization.
+     * Expects an EntryModel to be sent along on initialization.
      * 
      * @constructs
      */
@@ -201,7 +201,7 @@ EntryView = Backbone.View.extend({
      * 
      * @return {EntryView}
      */
-    render: function (before, after) {
+    render: function (model, status, before, after) {
         var attrs = this.model.toJSON();
 
         attrs.filesMarkup = '';
@@ -234,7 +234,13 @@ EntryView = Backbone.View.extend({
             });
         };
 
+        if(typeof before !== 'undefined')
+            before(attrs);
+
         $(this.el).html(this.template(attrs));
+
+        if(typeof after !== 'undefined')
+            after(attrs);
 
         return this;
     },
@@ -283,8 +289,13 @@ EntryView = Backbone.View.extend({
             },
             {
                 success: function(model, response) {
-                    try {
-                        that.model.uploadFiles(function() {
+                    that.model.uploadFiles(
+                        function(err) {
+                            new Error({
+                                message: err
+                            });
+                        },
+                        function() {
                             var xhr = new window.XMLHttpRequest();
 
                             xhr.upload.addEventListener("progress", function(evt){
@@ -295,13 +306,14 @@ EntryView = Backbone.View.extend({
                             }, false);
 
                             return xhr;
-                        }, oldDeleteList);
-                    } catch(e) {
-                        new Error('Something went wrong: '+e);
-                    }
+                        },
+                        oldDeleteList
+                    );
                 },
                 error: function (model, response) {
-                    new Error('Something went wrongs: '+response.responseText);
+                    new Error({
+                        message: response.responseText
+                    });
                 }
             }
         );
@@ -590,8 +602,44 @@ ListView = Backbone.View.extend({
     }
 }); // End ListView
 
-function Error(errorMsg) {
-    $('#wrap').fadeOut(300, function() {
-        $('#wrap').after(_.template($('#error-template').html(), { errorMessage: errorMsg }));
-    });
-}
+Error = Backbone.View.extend({
+    
+    tagName: 'section',
+
+    id: 'error',
+
+    template: _.template($('#error-template').html()),
+
+    events: {
+        'click .reload': 'reload'
+    },
+
+    /**
+     * @constructs
+     */
+    initialize: function () {
+        var that = this;
+
+        $('#wrap').fadeOut(300, function() {
+            $('#wrap').after(that.el);
+        });
+
+        this.render();
+    },
+
+    /**
+     * Render the error.
+     * 
+     * @return {Error}
+     */
+    render: function () {
+        var that = this;
+        $(this.el).html(that.template(this));
+
+        return this;
+    },
+
+    reload: function() {
+        window.location.reload();
+    }
+});

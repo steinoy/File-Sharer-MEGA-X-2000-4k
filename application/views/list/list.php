@@ -70,15 +70,15 @@
 	</script>
 	
 	<script type="text/template" id="error-template">
-		
-		<div id="error">
-			
+					
 			<h2>Something went wrong:</h2>
 			
-			<p class="error-message"><%= errorMessage %></p>
-		
-		</div>
-		
+			<p class="error-message"><%= options.message %></p>
+
+			<a href="#" class="reload shy-button">
+				Sorry about that, please reload the page and try again.
+			</a>
+				
 	</script>
 	
 </section>
