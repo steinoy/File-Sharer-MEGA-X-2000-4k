@@ -22,23 +22,26 @@
 
 		<?php foreach ($files as $file) : ?>
 			<div class="entry">
-				<?php 
+				<h3>
+					<a href="<?= $file['URI']; ?>">
+						<?= $file['name']; ?>
+					</a>
+				</h3>
 
-				$name_parts = explode('.', strtolower($file['name']));
-			
-				if(in_array(end($name_parts), $preview_extensions))
-				{
-					echo '<a class="preview-link" href="?p='.$file['name'].'" target="_blank"></a>';
-				}
-				else 
-				{
-					echo '<span class="preview-link empty"></span>';
-				}
+				<div class="actions">
 
-				?>
-				<a class="dl" href="<?= $file['URI']; ?>">
-					<?= $file['name']; ?>
-				</a>
+					<a class="download" href="<?= url::site('/'); ?>?p=<?= $file['name'] ?>" target="_blank">Preview</a>
+				
+					<?php $name_parts = explode('.', strtolower($file['name'])); ?>
+				
+					<?php if(in_array(end($name_parts), $preview_extensions)) : ?>
+					
+					<a class="preview" href="<?= url::site('/'); ?>?p=<?= $file['name'] ?>" target="_blank">Preview</a>
+
+					<?php endif; ?>
+
+				</div>
+
 			</div>
 		<?php endforeach; ?>
 
