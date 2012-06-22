@@ -591,6 +591,10 @@ input::-webkit-input-placeholder {
   height: 0;
   overflow: hidden;
 }
+#login {
+  background: url("../gfx/login.png") no-repeat left top;
+  padding-top: 128px;
+}
 .login-actions {
   position: relative;
   width: 100%;
@@ -598,7 +602,6 @@ input::-webkit-input-placeholder {
 }
 .login-actions .submit {
   margin-right: 0;
-  text-transform: uppercase;
   font-size: 13px;
   font-weight: normal;
 }
