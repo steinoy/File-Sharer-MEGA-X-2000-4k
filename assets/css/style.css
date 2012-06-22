@@ -74,7 +74,7 @@ input::-webkit-input-placeholder{color:#b9b9b9}
 #menu ul a{padding:10px}
 #list{float:left;margin-bottom:200px}
 #list-entries{list-style:none;padding:0;margin:0 0 0 0}
-.list-entry{border-top:1px solid #d4d2d1;padding:20px 0 58px 0;display:block;float:left;color:#000;text-decoration:none;position:relative;}
+.list-entry{border-top:1px solid #e1dfdf;padding:20px 0 58px 0;display:block;float:left;color:#000;text-decoration:none;position:relative;}
 .list-entry.hover.active{cursor:auto;color:#000;}
 .list-entry.hover.active input{cursor:auto;color:#000}
 .list-entry.hover.active .left .date{background-color:#000}

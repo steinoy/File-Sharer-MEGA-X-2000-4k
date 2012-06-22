@@ -71,8 +71,6 @@
 		<?= HTML::script('assets/js/libs/underscore-min.js'); ?>
 		
 		<?= HTML::script('assets/js/libs/backbone-min.js'); ?>
-
-		<?= HTML::script('assets/js/libs/spin.min.js'); ?>
 		
 		<?= HTML::script('assets/js/plugins.js'); ?>
 
