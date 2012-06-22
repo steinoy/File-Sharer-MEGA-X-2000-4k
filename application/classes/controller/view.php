@@ -46,11 +46,13 @@ class Controller_View extends Controller {
 		private function list_files()
 		{
 			$view = View::factory('view/all')
+				->bind('id', $id)
 			  ->bind('title', $title)
 			  ->bind('expires', $expires)
 			  ->bind('files', $files)
 			  ->bind('preview_extensions', $this->aviable_for_preview);
 			
+			$id = $this->entry->id;
 			$title = $this->entry->title;
 			$expires = $this->entry->get_formatted_expiration();
 			$files = $this->entry->get_formatted_files();
