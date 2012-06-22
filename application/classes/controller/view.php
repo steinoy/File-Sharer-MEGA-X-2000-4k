@@ -6,14 +6,12 @@ class Controller_View extends Controller {
 
 		private $id = 0;
 		private $entry = null;
-		private $preview = '';
 		private $aviable_for_preview = array('jpeg', 'jpg', 'png', 'gif', 'swf');
 
 		public function before()
 		{
 			parent::before();
 			$this->id = Helper_AlphaID::id($this->request->param('id'), TRUE);
-			$this->preview = isset($_GET['p']) ? $_GET['p'] : '';
 
 			$this->entry = ORM::factory('entry')
 				->where('id', '=', $this->id)
@@ -21,7 +19,7 @@ class Controller_View extends Controller {
 
 			if(empty($this->entry->id))
 			{
-			  throw new HTTP_Exception_404('This is not the entry you are looking for...');
+			  throw new HTTP_Exception_404('Whaaaa! Nothing here.');
 			}
 		}
 		
@@ -31,14 +29,14 @@ class Controller_View extends Controller {
 		 * View the presentation of an entry or individual file.
 		 */
 		public function action_index()
-		{									
-			if (empty($this->preview))
+		{
+			if (isset($_GET['preview']))
 			{
-				$this->list_files();
+				$this->preview($_GET['preview']);
 			}
 			else
 			{
-				$this->preview();
+				$this->list_files();
 			}
 		}
 
@@ -64,10 +62,10 @@ class Controller_View extends Controller {
 		/**
 		 * Preview an induvidual file.
 		 */
-		private function preview()
+		private function preview($file_name)
 		{
-			$file = $this->entry->get_file_absolute_path($this->preview);
-			$name_parts = explode('.', strtolower($this->preview));
+			$file = $this->entry->get_file_absolute_path($file_name);
+			$name_parts = explode('.', strtolower($file_name));
 			
 			if(in_array(end($name_parts), $this->aviable_for_preview))
 			{
@@ -86,7 +84,7 @@ class Controller_View extends Controller {
 			{
 				$view->bind('src', $src)->bind('size', $size);
 			
-				$src = $this->entry->get_file_uri($this->preview);
+				$src = $this->entry->get_file_uri($file_name);
 				$size = getimagesize($file);
 
 				$this->response->body($view);

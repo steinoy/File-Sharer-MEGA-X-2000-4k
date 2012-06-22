@@ -30,13 +30,13 @@
 
 				<div class="actions">
 
-					<a class="download" href="<?= url::site('/'); ?>?p=<?= $file['name'] ?>" target="_blank">Preview</a>
+					<a class="action download" href="<?= url::site('/download'); ?>?preview=<?= $file['name'] ?>" target="_blank">Download</a>
 				
 					<?php $name_parts = explode('.', strtolower($file['name'])); ?>
 				
 					<?php if(in_array(end($name_parts), $preview_extensions)) : ?>
 					
-					<a class="preview" href="<?= url::site('/'); ?>?p=<?= $file['name'] ?>" target="_blank">Preview</a>
+					<a class="action preview last" href="?preview=<?= $file['name'] ?>" target="_blank">Preview</a>
 
 					<?php endif; ?>
 
@@ -54,7 +54,7 @@
 	
 	<script>
 
-	$('a.preview-link').live('click', function(e) {
+	$('a.preview').live('click', function(e) {
 		e.preventDefault();
 		var link = this;
 
