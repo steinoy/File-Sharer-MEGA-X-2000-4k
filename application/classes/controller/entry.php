@@ -21,6 +21,30 @@ class Controller_Entry extends Controller_Backbone {
 			die('No access.');
 		}
 	}
+
+	/**
+	 * Returns all models as JSON
+	 */
+	public function action_read()
+	{
+		try
+		{
+			if( ! empty($_GET['offset']))
+			{
+				$this->response->body(json_encode($this->_model->read_all($_GET['offset'], 3)));
+			}
+			else
+			{
+				// Read all models
+				$this->response->body(json_encode($this->_model->read_all()));
+			}
+		}
+		catch (Kohana_Exception $e)
+		{
+			// Return HTTP 400: Bad Request
+			$this->response->status(400);
+		}
+	}
 	
 	public function after()
 	{

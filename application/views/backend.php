@@ -60,11 +60,14 @@
 		
 		</script>
 
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="<?= url::base(); ?>assets/js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="<?= url::base(); ?>assets/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
 		
 		<?= HTML::script('assets/js/libs/underscore-min.js'); ?>
+		
 		<?= HTML::script('assets/js/libs/backbone-min.js'); ?>
+
+		<?= HTML::script('assets/js/libs/spin.min.js'); ?>
 		
 		<?= HTML::script('assets/js/plugins.js'); ?>
 

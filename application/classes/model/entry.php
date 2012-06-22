@@ -38,6 +38,7 @@ class Model_Entry extends Model_Backbone {
 		$entries = $this->where('user_id', '=', Auth::instance()->get_user()->id)
 			->offset($from)
 			->limit($to)
+			->order_by('published', 'desc')
 			->find_all();
 
 		foreach ($entries AS $model)

@@ -27,7 +27,7 @@ class Controller_Backbone extends Controller_REST {
 	/**
 	 * @var  Model_Backbone  model
 	 */
-	private $_model;
+	protected $_model;
 
 	/**
 	 * @var  string  model name

@@ -1,5 +1,3 @@
-_list = null;
-
 jQuery(document).ready(function($) {
 
     // Login
@@ -29,11 +27,14 @@ jQuery(document).ready(function($) {
 
         var entries = [];
 
-        for (var i = _loadedEntries.length - 1; i >= 0; i--) {
-            entries.push(new EntryModel(_loadedEntries[i]));
+        for (var i = _loadedEntries.models.length - 1; i >= 0; i--) {
+            entries.push(new EntryModel(_loadedEntries.models[i]));
         };
 
         _list.entries.add(entries);
+
+        if(_loadedEntries.more)
+            $('.append-more-entries', this.el).show();
     }
     
 });
@@ -53,15 +54,12 @@ EntryModel = Backbone.Model.extend({
         deleteList: [],
     },
 
-    files: [],
-
-    uploading: false,
-
     /**
      * @constructs
      */
     initialize: function () {
-        
+        this.files = []; // Files are handled separately.
+        this.uploading = false;
     },
 
     /**
@@ -125,8 +123,8 @@ EntryModel = Backbone.Model.extend({
             type: 'POST',
             xhr: xhrCallback,
             success: function (data) {
-                that.set({ uploading: false });
                 that.save();
+                that.set({ uploading: false });
 
                 if(data.status === 'error') {
                     errorCallback(data.message);
@@ -166,9 +164,29 @@ EntryView = Backbone.View.extend({
         'click .delete': 'delete',
         'click .select-more-files': 'openFileBrowser',
         'click .single-file': 'toggleFileSelect',
-        'change .file-browser': 'handleFilesFromBrowser',
-        //'blur input': 'updateInput'
+        'change .file-browser': 'handleFilesFromBrowser'
+        // Makes clicking on '.save' directly from focused input unresponsive.
+        // The attributes gets updated in save() and handleFilesFromBrowser()
+        // instead for now...
+        // 'blur input': 'updateInput'
     },
+
+    spinner: new Spinner({
+        lines: 17, // The number of lines to draw
+        length: 0, // The length of each line
+        width: 3, // The line thickness
+        radius: 33, // The radius of the inner circle
+        rotate: 0, // The rotation offset
+        color: '#000', // #rgb or #rrggbb
+        speed: 1, // Rounds per second
+        trail: 60, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: 'auto', // Top position relative to parent in px
+        left: 'auto' // Left position relative to parent in px
+    }),
 
     /**
      * Expects an EntryModel to be sent along on initialization.
@@ -201,7 +219,7 @@ EntryView = Backbone.View.extend({
      * 
      * @return {EntryView}
      */
-    render: function (model, status, before, after) {
+    render: function () {
         var attrs = this.model.toJSON();
 
         attrs.filesMarkup = '';
@@ -234,13 +252,7 @@ EntryView = Backbone.View.extend({
             });
         };
 
-        if(typeof before !== 'undefined')
-            before(attrs);
-
         $(this.el).html(this.template(attrs));
-
-        if(typeof after !== 'undefined')
-            after(attrs);
 
         return this;
     },
@@ -278,6 +290,7 @@ EntryView = Backbone.View.extend({
      * @return {EntryView}
      */
     save: function () {
+        this.spinner.spin(this.el);
         var that = this;
 
         var oldDeleteList = this.model.get('deleteList');
@@ -388,6 +401,11 @@ EntryView = Backbone.View.extend({
      * @return {EntryView}
      */
     handleFilesFromBrowser: function(evt) {
+        this.model.set({
+            title: $('.title', this.el).val(),
+            expires: $('.expires', this.el).val()
+        });
+
         this.model.addFiles(evt.target.files);
         this.render();
         $('.file-browser', this.el).replaceWith('<input class="file-browser" name="uploads[]" type="file" multiple="">');
@@ -444,6 +462,8 @@ EntryCollection = Backbone.Collection.extend({
 
     view: null,
 
+    model: EntryModel,
+
     /**
      * @constructs
      */
@@ -467,7 +487,8 @@ ListView = Backbone.View.extend({
     template: _.template($('#list-template').html()),
 
     events: {
-        'drop #dropbox': 'handleFilesFromDropbox'
+        'drop #dropbox': 'handleFilesFromDropbox',
+        'click .append-more-entries': 'appendMoreEntries'
     },
 
     entries: null,
@@ -597,6 +618,33 @@ ListView = Backbone.View.extend({
 
         if(model.get('published') == '0%')
             $(newEntryView.el).click();
+
+        return this;
+    },
+
+    /**
+     * Fetch more entires and append them to the list
+     * 
+     * @return {ListView}
+     */
+    appendMoreEntries: function() {
+        var that = this;
+
+        this.entries.fetch({
+            add: true,
+            data: {
+                offset: this.entries.models.length
+            },
+            success: function(c, r) {
+                if(r.length === 0)
+                    $('.append-more-entries', that.el).html('No more entries!');
+            },
+            error: function(c,r) {
+                new Error({
+                    message: r.responseText
+                });
+            }
+        });
 
         return this;
     }

@@ -5,8 +5,8 @@ class Controller_List extends Controller_Template {
 	public $template = 'backend';
 	
 	/**
-		* Users with login privileges
-		*/
+	* Users with login privileges
+	*/
 	public function before()
 	{
 		parent::before();
@@ -20,7 +20,7 @@ class Controller_List extends Controller_Template {
 	/**
 	 * /
 	 * 
-	 * Preload some entires, most is done via main.js.
+	 * Preload some entires for backbone.
 	 */ 
 	public function action_index()
 	{
@@ -29,8 +29,13 @@ class Controller_List extends Controller_Template {
 		  ->bind('user', $user)
 		  ->bind('entries', $entries);
 
-		$entries = ORM::factory('entry')
-			->read_all(0, 3);
+		$models = ORM::factory('entry')->read_all(0, 3);
+		$more = ORM::factory('entry')->read_all(3, 1);
+
+		$entries = array(
+			'models' => $models,
+			'more' => ! empty($more) ? TRUE : FALSE,
+		);
 	}
 
 }

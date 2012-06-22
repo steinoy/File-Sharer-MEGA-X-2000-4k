@@ -6,7 +6,10 @@
 
 <script type="text/javascript">
 
-	_loadedEntries = <?= json_encode($entries); ?>;
+	_loadedEntries = {
+		models: <?= json_encode($entries['models']); ?>,
+		more: <?php echo $entries['more'] ? 'true' : 'false'; ?>
+	}
 
 </script>
 
@@ -25,7 +28,7 @@
 		</div>	
 		
 		<ul id="list-entries" class="full-width"></ul>
-		<div class="append-more-entries shy-button">Load more entires...</div>
+		<div class="append-more-entries shy-button">Load more entries...</div>
 		
 	</script>
 	
