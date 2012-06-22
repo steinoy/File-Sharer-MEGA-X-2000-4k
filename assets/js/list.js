@@ -614,10 +614,12 @@ ListView = Backbone.View.extend({
             model: model
         });
 
-        $('#list-entries').prepend(newEntryView.el);
-
-        if(model.get('published') == '0%')
+        if(model.get('published') == '0%') { // New entry
+            $('#list-entries').prepend(newEntryView.el);
             $(newEntryView.el).click();
+        } else { // Existing entry
+            $('#list-entries').append(newEntryView.el);
+        }
 
         return this;
     },
@@ -637,7 +639,7 @@ ListView = Backbone.View.extend({
             },
             success: function(c, r) {
                 if(r.length === 0)
-                    $('.append-more-entries', that.el).html('No more entries!');
+                    $('.append-more-entries', that.el).html('No more entries!').delay(1000).fadeOut();
             },
             error: function(c,r) {
                 new Error({

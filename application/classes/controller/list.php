@@ -33,7 +33,7 @@ class Controller_List extends Controller_Template {
 		$more = ORM::factory('entry')->read_all(3, 1);
 
 		$entries = array(
-			'models' => $models,
+			'models' => array_reverse($models),
 			'more' => ! empty($more) ? TRUE : FALSE,
 		);
 	}
