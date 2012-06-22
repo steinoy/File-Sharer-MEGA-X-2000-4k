@@ -138,6 +138,8 @@ class Controller_User extends Controller_Template {
 		$this->template->content = View::factory('user/login')
 			->bind('message', $message)
 			->bind('login_url', $login_url);
+
+		$this->template->footer = HTML::script('assets/js/login.js');
 		
 		try {				
 			if(Model_Facebook::instance()->logged_in())

@@ -8,7 +8,12 @@
   <title><?= Kohana::$config->load('general.title'); ?></title>
 
   <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <?= HTML::style('assets/css/style.css'); ?>
+
+  <?php if(isset($header)) : ?>
+  	<?= $header; ?>
+	<?php endif; ?>
 
 </head>
 
@@ -44,19 +49,19 @@
 		<div id="fb-root"></div>
 		<script>
 
-		_settings = {
-			siteURI: '<?= url::site('/'); ?>',
-			facebook: {
-				id: <?= Kohana::$config->load('facebook.id'); ?>
-			}
-		};
+			_settings = {
+				siteURI: '<?= url::site('/'); ?>',
+				facebook: {
+					id: <?= Kohana::$config->load('facebook.id'); ?>
+				}
+			};
 
-		(function() {
-			var e = document.createElement('script'); e.async = true;
-			e.src = document.location.protocol +
-			'//connect.facebook.net/en_US/all.js';
-			document.getElementById('fb-root').appendChild(e);
-		}());
+			(function() {
+				var e = document.createElement('script'); e.async = true;
+				e.src = document.location.protocol +
+				'//connect.facebook.net/en_US/all.js';
+				document.getElementById('fb-root').appendChild(e);
+			}());
 		
 		</script>
 
@@ -71,7 +76,9 @@
 		
 		<?= HTML::script('assets/js/plugins.js'); ?>
 
-		<?= HTML::script('assets/js/list.js'); ?>
+		<?php if(isset($footer)) : ?>
+			<?= $footer; ?>
+		<?php endif; ?>
 		
 </body>
 

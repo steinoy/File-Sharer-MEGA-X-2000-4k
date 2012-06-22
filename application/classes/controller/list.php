@@ -27,7 +27,8 @@ class Controller_List extends Controller_Template {
 		$this->template->content = View::factory('list/list')
 		  ->bind('message', $message)
 		  ->bind('user', $user)
-		  ->bind('entries', $entries);
+		  ->bind('entries', $entries)
+		  ->bind('footer', $footer);
 
 		$models = ORM::factory('entry')->read_all(0, 3);
 		$more = ORM::factory('entry')->read_all(3, 1);
@@ -36,6 +37,8 @@ class Controller_List extends Controller_Template {
 			'models' => array_reverse($models),
 			'more' => ! empty($more) ? TRUE : FALSE,
 		);
+
+		$this->template->footer = HTML::script('assets/js/list.js');
 	}
 
 }

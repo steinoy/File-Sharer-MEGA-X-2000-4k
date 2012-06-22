@@ -95,7 +95,7 @@ input::-webkit-input-placeholder{color:#b9b9b9}
 .list-entry .right{width:500px;float:left}
 .list-entry .submit-wrap{width:100%;margin-top:40px;display:block;float:left}
 .list-entry .the-files{padding:0 0 0 0;margin:20px 0 0 0}
-.list-entry .single-file{list-style:none;height:20px;background:url("../gfx/list.png") no-repeat left -40px;padding:3px 0 0 20px;margin-bottom:8px;opacity:.31;}
+.list-entry .single-file{list-style:none;height:20px;background:url("../gfx/list.png") no-repeat left -40px;padding:4px 0 0 22px;margin-bottom:8px;opacity:.31;font-size:11px;}
 .list-entry .single-file.uploaded{opacity:1}
 .list-entry .single-file.to-be-deleted{color:#e74f33;background-position:left -80px}
 .list-entry .single-file a{text-decoration:none;color:#000}

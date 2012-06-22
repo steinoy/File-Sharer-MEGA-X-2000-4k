@@ -1,41 +1,18 @@
 jQuery(document).ready(function($) {
 
-    // Login
-    $('#fb-login').click(function(e) {
-        e.preventDefault();
+    _list = new ListView();
+    $('#wrap').append(_list.el);
 
-        FB.init({
-            appId: _settings.facebook.id,
-            cookie: true,
-            oauth: true
-        });
+    var entries = [];
 
-        FB.Event.subscribe('auth.login', function(response) {
-            window.location.reload();
-        });
-        FB.Event.subscribe('auth.logout', function(response) {
-            window.location.reload();
-        });
+    for (var i = _loadedEntries.models.length - 1; i >= 0; i--) {
+        entries.push(new EntryModel(_loadedEntries.models[i]));
+    };
 
-        FB.login();
-    });
+    _list.entries.add(entries);
 
-    // Init list
-    if(typeof _loadedEntries !== 'undefined') {
-        _list = new ListView();
-        $('#wrap').append(_list.el);
-
-        var entries = [];
-
-        for (var i = _loadedEntries.models.length - 1; i >= 0; i--) {
-            entries.push(new EntryModel(_loadedEntries.models[i]));
-        };
-
-        _list.entries.add(entries);
-
-        if(_loadedEntries.more)
-            $('.append-more-entries', this.el).show();
-    }
+    if(_loadedEntries.more)
+        $('.append-more-entries', this.el).show();
     
 });
 
