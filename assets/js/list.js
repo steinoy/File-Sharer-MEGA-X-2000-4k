@@ -62,32 +62,29 @@ EntryModel = Backbone.Model.extend({
     },
 
     /**
-     * TODO: Upload files recursively.
+     * Recursively upload all the files.
      * 
-     * @return {mixed}
+     * @return {EntryModel}
      */
     uploadFiles: function (errorCallback, xhrCallback, filesToExclude) {
-        if(_.isEmpty(this.files) || this.uploading) {
-            return false;
-        } else {
-            var filesToUpload = this.files;
-            this.uploading = true;
-        }
-
-        var formData = new FormData();
-
-        for (var i=0; i < filesToUpload.length; i++) {
-            if($.inArray(filesToUpload[i].name, filesToExclude) === -1) {
-                formData.append(filesToUpload[i].name, filesToUpload[i]);
-            }
-        }
-
-        for (var i=0; i < filesToExclude.length; i++) {
-            formData.append('delete_list[]', filesToExclude[i]);
-        }
-
-        this.files = [];
         var that = this;
+        this.uploading = true;
+
+        if( ! this.files.length) {
+            this.uploading = false;
+
+            return this;
+        } else if ($.inArray(this.files[0].name, filesToExclude) !== -1) {
+            this.files.splice(0, 1);
+            this.uploadFiles(errorCallback, xhrCallback, filesToExclude);
+
+            return this;
+        } else {
+            var file = this.files[0];
+        }
+        
+        var formData = new FormData();
+        formData.append(file.name, file);
 
         this.xhr = $.ajax({
             url: _settings.siteURI+'upload/files/'+this.get('id'),
@@ -98,17 +95,34 @@ EntryModel = Backbone.Model.extend({
             type: 'POST',
             xhr: xhrCallback,
             success: function (data) {
-                that.uploading = false;
+                that.files.splice(0, 1);
                 that.save();
+                that.uploadFiles(errorCallback, xhrCallback, filesToExclude);
 
                 if(data.status === 'error') {
                     errorCallback(data.message);
                 }
             },
             error: function (data) {
-                errorCallback(data.statusText);
+                if(data.statusText === 'abort') {
+                    that.uploading = false;
+                    that.save();
+                } else {
+                    errorCallback(data.statusText);
+                }
             }
         });
+
+        return this;
+    },
+
+    /**
+     * Abort the current ajax request and discontinue file uploads.
+     * 
+     * @return {EntryModel}
+     */
+    abortUpload: function() {
+        this.xhr.abort();
 
         return this;
     }
@@ -292,8 +306,7 @@ EntryView = Backbone.View.extend({
      * @return {EntryView}
      */
     cancel: function () {
-        this.model.xhr.abort();
-        this.model.uploading = false;
+        this.model.abortUpload();
         this.render();
 
         return this;
