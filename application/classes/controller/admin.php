@@ -36,16 +36,7 @@ class Controller_Admin extends Controller_Template {
 			->bind('errors', $errors)
 			->bind('message', $message)
 			->bind('users', $users);
-			
-		$users = array();
-		
-		$all_users = ORM::factory('user', array('id' => '*'))->find_all()->as_array();
-
-		foreach($all_users as $user) {
-			$users[] = array(
-				'username' => $user->username,
-				'id' => $user->id
-			);
-		}		
+				
+		$users = ORM::factory('user', array('id' => '*'))->find_all()->as_array();	
 	}
 }

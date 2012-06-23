@@ -76,10 +76,6 @@ EntryModel = Backbone.Model.extend({
 
         var formData = new FormData();
 
-        formData.append('id', this.get('id'));
-        formData.append('title', this.get('title'));
-        formData.append('expires', this.get('expires'));
-
         for (var i=0; i < filesToUpload.length; i++) {
             if($.inArray(filesToUpload[i].name, filesToExclude) === -1) {
                 formData.append(filesToUpload[i].name, filesToUpload[i]);
@@ -102,8 +98,8 @@ EntryModel = Backbone.Model.extend({
             type: 'POST',
             xhr: xhrCallback,
             success: function (data) {
-                that.save();
                 that.uploading = false;
+                that.save();
 
                 if(data.status === 'error') {
                     errorCallback(data.message);
@@ -137,17 +133,18 @@ EntryView = Backbone.View.extend({
     model: null,
 
     events: {
-        'click': 'onEntryClick',
-        'click .close': 'onCloseClick',
-        'click .save': 'onSaveClick',
-        'click .delete': 'onDeleteClick',
+        'click .close': 'close',
+        'click .save': 'save',
+        'click .cancel': 'cancel',
+        'click .delete': 'deleteModel',
         'click .select-more-files': 'openFileBrowser',
-        'click .single-file': 'toggleFileSelect',
-        'change .file-browser': 'handleFilesFromBrowser'
+        'click': 'onClick',
+        'click .single-file': 'onFileClick',
+        'change .file-browser': 'onFileBrowserChange'
         // Makes clicking on '.save' directly from focused input unresponsive.
         // The attributes gets updated in save() and handleFilesFromBrowser()
         // instead for now...
-        // 'blur input': 'updateInput'
+        // 'blur input': 'onInputBlur'
     },
 
     spinner: new Spinner({
@@ -276,6 +273,7 @@ EntryView = Backbone.View.extend({
                         },
                         oldDeleteList
                     );
+                    that.render();
                 },
                 error: function (model, response) {
                     new Error({
@@ -289,84 +287,35 @@ EntryView = Backbone.View.extend({
     },
 
     /**
-     * Callback for blur event on the entry inputs.
-     * Update the model attributes when inputs has
-     * been interacted with.
+     * Cancel upload.
      * 
-     * @param  {obj} evt The event object containing the target input
      * @return {EntryView}
      */
-    updateInput: function (evt) {
-        var that = this;
-
-        if($(evt.target).attr('name') === 'title') {
-            $(evt.target).val(function( i, val ) {
-                that.model.set({title: val});
-
-                return val;
-            });
-        }
-
-        if($(evt.target).attr('name') === 'expires') {
-            $(evt.target).val(function( i, val ) {
-                val = val === '' ? '∞' : val;
-                that.model.set({expires: val});
-
-                return val;
-            });
-        }
+    cancel: function () {
+        this.model.xhr.abort();
+        this.model.uploading = false;
+        this.render();
 
         return this;
     },
 
     /**
-     * Callback for click on view.
+     * Close the entry.
      * 
      * @return {EntryView}
      */
-    onEntryClick: function (evt) {
-        if( ! $(evt.target).hasClass('close')) {
-            $('.list-entry').removeClass('active');
-            $(this.el).addClass('active');
-        }
-
-        return this;
-    },
-
-    /**
-     * Callback for click on close.
-     * 
-     * @return {EntryView}
-     */
-    onCloseClick: function (evt) {
+    close: function () {
         $(this.el).removeClass('active').mouseleave();
 
         return this;
     },
 
     /**
-     * Callback for click on save.
+     * Destroy the model.
      * 
      * @return {EntryView}
      */
-    onSaveClick: function (evt) {
-        if(this.model.uploading) {
-          this.model.xhr.abort();
-          this.model.uploading = false;
-          this.render();
-        } else {
-          this.save();
-        }
-
-        return this;
-    },
-
-    /**
-     * Callback for click on delete.
-     * 
-     * @return {EntryView}
-     */
-    onDeleteClick: function () {
+    deleteModel: function () {
         this.model.destroy();
 
         return this;
@@ -384,12 +333,27 @@ EntryView = Backbone.View.extend({
     },
 
     /**
+     * Callback for click on the view.
+     * Open the entry.
+     * 
+     * @return {EntryView}
+     */
+    onClick: function (evt) {
+        if( ! $(evt.target).hasClass('close')) {
+            $('.list-entry').removeClass('active');
+            $(this.el).addClass('active');
+        }
+
+        return this;
+    },
+
+    /**
      * Callback for change event on the file input for this entry.
      * 
      * @param {obj} evt The event object containg the target with files.
      * @return {EntryView}
      */
-    handleFilesFromBrowser: function(evt) {
+    onFileBrowserChange: function(evt) {
         this.model.set({
             title: $('.title', this.el).val(),
             expires: $('.expires', this.el).val()
@@ -409,7 +373,7 @@ EntryView = Backbone.View.extend({
      * 
      * @return {EntryView}
      */
-    toggleFileSelect: function (evt) {
+    onFileClick: function (evt) {
         var deleteList = this.model.get('deleteList');
 
         var deleteListIndex = $.inArray($(evt.target).html(), deleteList);
@@ -428,13 +392,44 @@ EntryView = Backbone.View.extend({
     },
 
     /**
-     * Callbck for when model is destroyed.
+     * Callback for when model is destroyed.
      * Remove the view.
      * 
      * @return {EntryView}
      */
     onModelDestroy: function () {
         this.remove();
+
+        return this;
+    },
+
+    /**
+     * Callback for blur event on the entry inputs.
+     * Update the model attributes when inputs has
+     * been interacted with.
+     * 
+     * @param  {obj} evt The event object containing the target input
+     * @return {EntryView}
+     */
+    onInputBlur: function (evt) {
+        var that = this;
+
+        if($(evt.target).attr('name') === 'title') {
+            $(evt.target).val(function( i, val ) {
+                that.model.set({title: val});
+
+                return val;
+            });
+        }
+
+        if($(evt.target).attr('name') === 'expires') {
+            $(evt.target).val(function( i, val ) {
+                val = val === '' ? '∞' : val;
+                that.model.set({expires: val});
+
+                return val;
+            });
+        }
 
         return this;
     }

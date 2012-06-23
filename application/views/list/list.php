@@ -63,7 +63,7 @@
 				</div>
 				<div class="submit-wrap <% if (uploading) { %>uploading<% } %>">
 				<% if (uploading) { %>
-					<div class="submit save">Cancel</div>
+					<div class="submit cancel">Cancel</div>
 				<% } else { %>
 					<div class="submit save">Save</div>
 				<% } %>
