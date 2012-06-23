@@ -29,7 +29,7 @@
 				</h3>
 				<div class="actions">
 
-					<a class="action download" href="<?= url::site('/download'); ?>?filename=<?= $id ?>/<?= $file['name'] ?>">Download</a>
+					<a class="action download" href="<?= $file['URI'] ?>">Download</a>
 				
 					<?php $name_parts = explode('.', strtolower($file['name'])); ?>
 				

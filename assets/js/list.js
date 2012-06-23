@@ -37,6 +37,7 @@ EntryModel = Backbone.Model.extend({
     initialize: function () {
         this.files = []; // Files are handled separately.
         this.uploading = false;
+        this.xhr = null;
     },
 
     /**
@@ -66,10 +67,11 @@ EntryModel = Backbone.Model.extend({
      * @return {mixed}
      */
     uploadFiles: function (errorCallback, xhrCallback, filesToExclude) {
-        if(_.isEmpty(this.files)) {
+        if(_.isEmpty(this.files) || this.uploading) {
             return false;
         } else {
             var filesToUpload = this.files;
+            this.uploading = true;
         }
 
         var formData = new FormData();
@@ -91,7 +93,7 @@ EntryModel = Backbone.Model.extend({
         this.files = [];
         var that = this;
 
-        $.ajax({
+        this.xhr = $.ajax({
             url: _settings.siteURI+'upload/files/'+this.get('id'),
             data: formData,
             cache: false,
@@ -101,7 +103,7 @@ EntryModel = Backbone.Model.extend({
             xhr: xhrCallback,
             success: function (data) {
                 that.save();
-                that.set({ uploading: false });
+                that.uploading = false;
 
                 if(data.status === 'error') {
                     errorCallback(data.message);
@@ -135,10 +137,10 @@ EntryView = Backbone.View.extend({
     model: null,
 
     events: {
-        'click': 'open',
-        'click .close': 'close',
-        'click .save': 'save',
-        'click .delete': 'delete',
+        'click': 'onEntryClick',
+        'click .close': 'onCloseClick',
+        'click .save': 'onSaveClick',
+        'click .delete': 'onDeleteClick',
         'click .select-more-files': 'openFileBrowser',
         'click .single-file': 'toggleFileSelect',
         'change .file-browser': 'handleFilesFromBrowser'
@@ -229,34 +231,9 @@ EntryView = Backbone.View.extend({
             });
         };
 
+        attrs.uploading = this.model.uploading;
+
         $(this.el).html(this.template(attrs));
-
-        return this;
-    },
-
-    /**
-     * Callback for click event on view.
-     * Open the entry.
-     * 
-     * @return {EntryView}
-     */
-    open: function (evt) {
-        if( ! $(evt.target).hasClass('close')) {
-            $('.list-entry').removeClass('active');
-            $(this.el).addClass('active');
-        }
-
-        return this;
-    },
-
-    /**
-     * Callback for click event on close.
-     * Close the entry.
-     * 
-     * @return {EntryView}
-     */
-    close: function (evt) {
-        $(this.el).removeClass('active').mouseleave();
 
         return this;
     },
@@ -312,24 +289,6 @@ EntryView = Backbone.View.extend({
     },
 
     /**
-     * Delete the model.
-     * 
-     * @return {EntryView}
-     */
-    delete: function () {
-        var that = this;
-
-        this.model.destroy({
-            success: function (model, response) {
-            },
-            error: function (model, response) {
-            }
-        });
-
-        return this;
-    },
-
-    /**
      * Callback for blur event on the entry inputs.
      * Update the model attributes when inputs has
      * been interacted with.
@@ -356,6 +315,59 @@ EntryView = Backbone.View.extend({
                 return val;
             });
         }
+
+        return this;
+    },
+
+    /**
+     * Callback for click on view.
+     * 
+     * @return {EntryView}
+     */
+    onEntryClick: function (evt) {
+        if( ! $(evt.target).hasClass('close')) {
+            $('.list-entry').removeClass('active');
+            $(this.el).addClass('active');
+        }
+
+        return this;
+    },
+
+    /**
+     * Callback for click on close.
+     * 
+     * @return {EntryView}
+     */
+    onCloseClick: function (evt) {
+        $(this.el).removeClass('active').mouseleave();
+
+        return this;
+    },
+
+    /**
+     * Callback for click on save.
+     * 
+     * @return {EntryView}
+     */
+    onSaveClick: function (evt) {
+        if(this.model.uploading) {
+          this.model.xhr.abort();
+          this.model.uploading = false;
+          this.render();
+        } else {
+          this.save();
+        }
+
+        return this;
+    },
+
+    /**
+     * Callback for click on delete.
+     * 
+     * @return {EntryView}
+     */
+    onDeleteClick: function () {
+        this.model.destroy();
 
         return this;
     },

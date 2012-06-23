@@ -290,15 +290,19 @@ input::-webkit-input-placeholder
       background-position: left -20px
       cursor: pointer
 
+  .uploading
+
+    .save
+      opacity: .3
+
+      &:hover
+        opacity: 1
+
 .append-more-entries
     float: left
     margin-top: 12px
     margin-left: 100px
     display: none
-
-.uploading .delete,.uploading .delete:hover
-  opacity: .3
-  background-position: left top
 
 .upload,.upload:visited
   border-top: 1px solid black
@@ -486,7 +490,7 @@ input::-webkit-input-placeholder
     h3
       font-size: 16px
       font-weight: bold
-      margin-bottom: 8px
+      margin-bottom: 9px
 
     .actions
       padding-top: 4px

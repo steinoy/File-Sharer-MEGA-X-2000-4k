@@ -118,7 +118,7 @@ class Model_Entry extends Model_Backbone {
 	 * @return Model_Entry
 	 */
 	public function save_files(Array $files)
-	{	
+	{
 		$saved_files = array();
 		$dir = DOCROOT.'files/'.$this->id;
 

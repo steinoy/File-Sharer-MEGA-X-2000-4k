@@ -52,13 +52,23 @@
 			
 			<div class="content entry-content">
 				<ul class="the-files"><%= filesMarkup %></ul>
-				<% if (URI.length > 1) { %> <div class="the-URI"><%= URI %></div> <% } %>
+				<% if (URI.length > 1) { %>
+					<div class="the-URI">
+						<%= URI %>
+					</div>
+				<% } %>
 				<div class="submit-wrap">
 					<div class="select-more-files shy-button">Add more files...</div>
 					<input class="file-browser" name="uploads[]" type=file multiple>
 				</div>
-				<div class="submit-wrap">
-					<div class="submit save">Save</div><div class="submit close">Close</div>
+				<div class="submit-wrap <% if (uploading) { %>uploading<% } %>">
+				<% if (uploading) { %>
+					<div class="submit save">Cancel</div>
+				<% } else { %>
+					<div class="submit save">Save</div>
+				<% } %>
+					
+					<div class="submit close">Close</div>
 				</div>
 			</div>
 		
