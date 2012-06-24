@@ -1,3 +1,8 @@
+_.templateSettings = {
+    evaluate : /\{\[([\s\S]+?)\]\}/g,
+    interpolate : /\{\{([\s\S]+?)\}\}/g
+};
+
 jQuery(document).ready(function($) {
 
     _list = new ListView();

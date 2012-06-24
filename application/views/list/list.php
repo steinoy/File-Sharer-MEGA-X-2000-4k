@@ -37,7 +37,7 @@
 		<div class="left">
 			
 			<div class="date">
-				<span class="content"><%= published %></span>
+				<span class="content">{{ published }}</span>
 			</div>
 		
 		</div>
@@ -46,27 +46,27 @@
 			
 			<div class="delete entry-content"></div>
 			
-			<input type="text" name="title" class="h2 title" size="30" value="<%= title %>" />
+			<input type="text" name="title" class="h2 title" size="30" value="{{ title }}" />
 			
-			<p class="meta">Expires in <input size="1" name="expires" class="expiration expires" value="<%= expires %>" maxlength="2" /> days</p>
+			<p class="meta">Expires in <input size="1" name="expires" class="expiration expires" value="{{ expires }}" maxlength="2" /> days</p>
 			
 			<div class="content entry-content">
-				<ul class="the-files"><%= filesMarkup %></ul>
-				<% if (URI.length > 1) { %>
+				<ul class="the-files">{{ filesMarkup }}</ul>
+				{[ if (URI.length > 1) { ]}
 					<div class="the-URI">
-						<%= URI %>
+						{{ URI }}
 					</div>
-				<% } %>
+				{[ } ]}
 				<div class="submit-wrap">
 					<div class="select-more-files shy-button">Add more files...</div>
 					<input class="file-browser" name="uploads[]" type=file multiple>
 				</div>
-				<div class="submit-wrap <% if (uploading) { %>uploading<% } %>">
-				<% if (uploading) { %>
+				<div class="submit-wrap {[ if (uploading) { ]}uploading{[ } ]}">
+				{[ if (uploading) { ]}
 					<div class="submit cancel">Cancel</div>
-				<% } else { %>
+				{[ } else { ]}
 					<div class="submit save">Save</div>
-				<% } %>
+				{[ } ]}
 					
 					<div class="submit close">Close</div>
 				</div>
@@ -78,7 +78,7 @@
 	
 	<script type="text/template" id="list-entry-file-template">
 		
-		<li class="single-file <% if (toBeDeleted) { %>to-be-deleted<% } %> <% if (uploaded) { %> uploaded <% } %>"><%= fileName %></li>
+		<li class="single-file {[ if (toBeDeleted) { ]}to-be-deleted{[ } ]} {[ if (uploaded) { ]} uploaded {[ } ]}">{{ fileName }}</li>
 		
 	</script>
 	
@@ -86,7 +86,7 @@
 					
 			<h2>Something went wrong:</h2>
 			
-			<p class="error-message"><%= options.message %></p>
+			<p class="error-message">{{ options.message }}</p>
 
 			<a href="#" class="reload shy-button">
 				Sorry about that, please reload the page and try again.
