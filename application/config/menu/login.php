@@ -10,19 +10,19 @@ return array
 	(	
 		array
 		(
-			'url'   => url::site('/'),
+			'url'   => '/',
 			'title' => 'Files',
 			'classes' => array('shy-button')
 		),
 		array
 		(
-			'url'   => url::site('/user'),
+			'url'   => '/user',
 			'title' => 'Account',
 			'classes' => array('shy-button')
 		),
 		array
 		(
-			'url'   => url::site('/user/logout'),
+			'url'   => '/user/logout',
 			'title' => 'Log out',
 			'classes' => array('shy-button')
 		),

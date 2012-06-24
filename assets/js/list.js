@@ -37,7 +37,7 @@ EntryModel = Backbone.Model.extend({
     initialize: function () {
         this.files = []; // Files are handled separately.
         this.uploading = false;
-        this.xhr = null;
+        this.xhr = $.ajax();
     },
 
     /**
@@ -52,7 +52,11 @@ EntryModel = Backbone.Model.extend({
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
             if( ! _.isNumber(file) && ! _.isFunction(file) ) {
-                newFiles.push(file);
+                if(file.size > _settings.max_size) {
+                    alert('TOOO BIIIIG')
+                } else {
+                    newFiles.push(file);
+                }
             }
         }
 
@@ -72,6 +76,8 @@ EntryModel = Backbone.Model.extend({
 
         if( ! this.files.length) {
             this.uploading = false;
+            this.save(); // Won't trigger change when upload has been canceled and then started again for some reason
+            this.trigger('change');
 
             return this;
         } else if ($.inArray(this.files[0].name, filesToExclude) !== -1) {
@@ -95,13 +101,17 @@ EntryModel = Backbone.Model.extend({
             type: 'POST',
             xhr: xhrCallback,
             success: function (data) {
-                that.files.splice(0, 1);
-                that.save();
-                that.uploadFiles(errorCallback, xhrCallback, filesToExclude);
-
                 if(data.status === 'error') {
                     errorCallback(data.message);
+                    return false;
                 }
+
+                var fileNames = that.get('fileNames');
+                fileNames.push(that.files[0].name);
+                that.set({fileNames: fileNames});
+                that.files.splice(0, 1);
+
+                that.uploadFiles(errorCallback, xhrCallback, filesToExclude);
             },
             error: function (data) {
                 if(data.statusText === 'abort') {
@@ -256,9 +266,15 @@ EntryView = Backbone.View.extend({
      */
     save: function () {
         this.spinner.spin(this.el);
-        var that = this;
 
+        var that = this;
         var oldDeleteList = this.model.get('deleteList');
+        var totalFilesSize = 0;
+        var totalDone = 0;
+
+        for (var i = that.model.files.length - 1; i >= 0; i--) {
+            totalFilesSize += that.model.files[i].size;
+        };
 
         this.model.save(
             {
@@ -273,14 +289,20 @@ EntryView = Backbone.View.extend({
                                 message: err
                             });
                         },
-                        function() {
+                        function(file) {
                             var xhr = new window.XMLHttpRequest();
+                            var total = 0;
 
-                            xhr.upload.addEventListener("progress", function(evt){
+                            xhr.upload.addEventListener('progress', function(evt){
                                 if (evt.lengthComputable) {
-                                    var percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                                    total = evt.total;
+                                    var percentComplete = Math.round(((totalDone+evt.loaded) / totalFilesSize) * 100);
                                     $('.date .content', that.el).html(percentComplete+'%');
                                 }
+                            }, false);
+
+                            xhr.upload.addEventListener('load', function(evt){
+                                totalDone += total;
                             }, false);
 
                             return xhr;
@@ -329,6 +351,7 @@ EntryView = Backbone.View.extend({
      * @return {EntryView}
      */
     deleteModel: function () {
+        this.model.abortUpload();
         this.model.destroy();
 
         return this;

@@ -143,10 +143,10 @@ input::-webkit-input-placeholder{color:#b9b9b9}
 #error{width:300px;position:fixed;left:50%;margin-left:-150px;top:140px;}
 #error h2{font-size:24px;margin:0 0 5px 0;float:left;width:100%}
 #error .error-message{border:1px dashed #d4d2d1;padding:10px;float:left;width:100%}
-#view-all{float:left;margin-top:30px;width:100%;}
-#view-all .entry{padding-left:0;float:left;width:100%;margin-bottom:30px;}
+#view-all{float:left;margin-top:30px;margin-bottom:60px;width:100%;}
+#view-all .entry{padding-left:0;float:left;width:100%;margin-bottom:35px;}
 #view-all .entry h3{font-size:16px;font-weight:bold;margin-bottom:9px}
-#view-all .entry .actions{padding-top:4px;border-top:1px solid #e1dfdf;}
+#view-all .entry .actions{padding-top:3px;border-top:1px solid #e1dfdf;}
 #view-all .entry .actions .action{float:left;font-size:11px;font-weight:normal;padding:4px 10px 0 22px;background:url("../gfx/view.png") no-repeat left -60px;margin-right:10px;}
 #view-all .entry .actions .action.downlaod:hover{background-position:0 -80px}
 #view-all .entry .actions .action.preview{background-position:left 0;}

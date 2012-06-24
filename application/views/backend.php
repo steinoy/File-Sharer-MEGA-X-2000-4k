@@ -49,11 +49,34 @@
 		<div id="fb-root"></div>
 		<script>
 
+		<?php 
+
+		if(ini_get('post_max_size') < ini_get('upload_max_filesize')) {
+			$max_size = ini_get('post_max_size');
+		} else {
+			$max_size = ini_get('upload_max_filesize');
+		}
+
+		$max_size = trim($max_size);
+    $last = strtolower($max_size[strlen($max_size)-1]);
+
+    switch($last) {
+        case 'g':
+            $max_size *= 1024;
+        case 'm':
+            $max_size *= 1024;
+        case 'k':
+            $max_size *= 1024;
+    }
+
+		?>
+
 			_settings = {
 				siteURI: '<?= url::site('/'); ?>',
 				facebook: {
 					id: <?= Kohana::$config->load('facebook.id'); ?>
-				}
+				},
+				maxSize: <?= $max_size; ?>
 			};
 
 			(function() {

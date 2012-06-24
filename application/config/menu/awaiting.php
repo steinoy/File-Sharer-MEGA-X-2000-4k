@@ -10,7 +10,7 @@ return array
 	(
 		array
 		(
-			'url'   => url::site('/user/logout'),
+			'url'   => '/user/logout',
 			'title' => 'Log out',
 			'classes' => array('shy-button')
 		),

@@ -1,6 +1,6 @@
-# File Transporter MEGA-X 2000 4k
+# File Sharer MEGA-X 2000 4k
 
-Despite it's name, the _File Transporter MEGA-X 2000 4k_ is a is a drop-dead simple file uploader for sharing files with clients and others.
+Despite it's name, the _File Sharer MEGA-X 2000 4k_ is a is a drop-dead simple file uploader for sharing files with clients and others.
 
 ## Installation
 
