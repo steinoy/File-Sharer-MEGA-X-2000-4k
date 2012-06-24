@@ -57,8 +57,8 @@ EntryModel = Backbone.Model.extend({
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
             if( ! _.isNumber(file) && ! _.isFunction(file) ) {
-                if(file.size > _settings.max_size) {
-                    alert('TOOO BIIIIG')
+                if(file.size > _settings.maxSize) {
+                    this.trigger('error', file.name+' is too big! Filesize exceeds the limit set by server.');
                 } else {
                     newFiles.push(file);
                 }
@@ -66,12 +66,15 @@ EntryModel = Backbone.Model.extend({
         }
 
         this.files = $.merge(this.files, newFiles);
+        this.trigger('change');
 
         return this;
     },
 
     /**
      * Recursively upload all the files.
+     *
+     * TODO: Add chunking?
      * 
      * @return {EntryModel}
      */
@@ -184,6 +187,7 @@ EntryView = Backbone.View.extend({
     initialize: function () {
         this.model.bind('change', this.render, this);
         this.model.bind('destroy', this.onModelDestroy, this);
+        this.model.bind('error', this.onModelError, this);
 
         // Add hover classes, CSS :hover leaves it in hover state on close.
         $(this.el).bind({
@@ -426,6 +430,20 @@ EntryView = Backbone.View.extend({
     },
 
     /**
+     * Callback for when model triggers an error.
+     * Display the error message to the user.
+     * 
+     * @return {EntryView}
+     */
+    onModelError: function (message) {
+        new PopUp({
+            message: message
+        });
+
+        return this;
+    },
+
+    /**
      * Callback for blur event on the entry inputs.
      * Update the model attributes when inputs has
      * been interacted with.
@@ -602,10 +620,8 @@ ListView = Backbone.View.extend({
             deleteList: []
         });
 
-        newEntry.files = [];
-        newEntry.addFiles(files);
-
         this.entries.add(newEntry);
+        newEntry.addFiles(files);
 
         return this;
     },
@@ -657,6 +673,42 @@ ListView = Backbone.View.extend({
         return this;
     }
 }); // End ListView
+
+PopUp = Backbone.View.extend({
+    
+    tagName: 'section',
+
+    template: _.template($('#popup-template').html()),
+
+    events: {
+        'click': 'close'
+    },
+
+    /**
+     * @constructs
+     */
+    initialize: function () {
+        $('#wrap').after(this.el);
+        $(this.el).addClass('popup')
+        this.render();
+    },
+
+    /**
+     * Render the pupup.
+     * 
+     * @return {Error}
+     */
+    render: function () {
+        var that = this;
+        $(this.el).html(that.template(this));
+
+        return this;
+    },
+
+    close: function() {
+        this.remove();
+    }
+});
 
 Error = Backbone.View.extend({
     

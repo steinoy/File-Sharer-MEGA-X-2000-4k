@@ -290,7 +290,6 @@ input::-webkit-input-placeholder
       background-position: left -20px
       cursor: pointer
 
-
   .cancel
     opacity: .3
 
@@ -456,6 +455,22 @@ input::-webkit-input-placeholder
     border-top: 1px solid black
     padding-top: 10px
     margin-bottom: 15px
+
+.popup
+  position: absolute
+  width: 320px
+  top: 50%
+  left: 50%
+  margin-left: -180px
+  background: lighten(gray, 70%) url(../gfx/close.png) no-repeat left top
+  padding: 20px
+
+  &:hover
+    cursor: pointer
+
+  p
+    font-size:12px
+    margin-bottom:5px
 
 #error
   width: 300px

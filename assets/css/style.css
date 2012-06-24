@@ -140,6 +140,9 @@ input::-webkit-input-placeholder{color:#b9b9b9}
 #user .option-section{float:left;width:280px;}
 #user .option-section .entry{margin-bottom:15px;float:left;width:100%}
 #user .option-title{font-size:18px;border-top:1px solid #000;padding-top:10px;margin-bottom:15px}
+.popup{position:absolute;width:320px;top:50%;left:50%;margin-left:-180px;background:#f2f2f1 url("../gfx/close.png") no-repeat left top;padding:20px;}
+.popup:hover{cursor:pointer}
+.popup p{font-size:12px;margin-bottom:5px}
 #error{width:300px;position:fixed;left:50%;margin-left:-150px;top:140px;}
 #error h2{font-size:24px;margin:0 0 5px 0;float:left;width:100%}
 #error .error-message{border:1px dashed #d4d2d1;padding:10px;float:left;width:100%}

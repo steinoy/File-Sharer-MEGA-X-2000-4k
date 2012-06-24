@@ -81,6 +81,12 @@
 		<li class="single-file {[ if (toBeDeleted) { ]}to-be-deleted{[ } ]} {[ if (uploaded) { ]} uploaded {[ } ]}">{{ fileName }}</li>
 		
 	</script>
+
+	<script type="text/template" id="popup-template">
+
+			<p class="popup-message">{{ options.message }}</p>
+				
+	</script>
 	
 	<script type="text/template" id="error-template">
 					
