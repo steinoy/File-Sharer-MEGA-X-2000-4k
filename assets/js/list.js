@@ -498,7 +498,6 @@ ListView = Backbone.View.extend({
     template: _.template($('#list-template').html()),
 
     events: {
-        'drop #dropbox': 'handleFilesFromDropbox',
         'click .append-more-entries': 'appendMoreEntries'
     },
 
@@ -521,21 +520,18 @@ ListView = Backbone.View.extend({
                 evt.originalEvent.stopPropagation();
                 evt.originalEvent.preventDefault();
             },
-
             dragleave: function(evt) {
                 evt.originalEvent.stopPropagation();
                 evt.originalEvent.preventDefault();
 
                 $(this).removeClass('hover');
             },
-
             dragover: function(evt) {
                 evt.originalEvent.stopPropagation();
                 evt.originalEvent.preventDefault();
 
                 $(this).addClass('hover');
             },
-
             drop: function(evt) {
                 that.handleFilesFromDropbox(evt.originalEvent);
                 $(this).removeClass('hover');
@@ -589,8 +585,10 @@ ListView = Backbone.View.extend({
      * 
      * @return {ListView}
      */
-    handleFilesFromDropbox: function() {
-        this.newEntry(evt.target.files);
+    handleFilesFromDropbox: function(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        this.newEntry(evt.dataTransfer.files);
         return this;
     },
 
