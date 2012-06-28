@@ -58,10 +58,7 @@
 		var link = this;
 
 		$('#wrap').fadeOut(200, 0, function() {
-			$('body').prepend('<div id="preview-overlay"></div><iframe id="preview-frame" src="'+$(link).attr('href')+'" width="100%" height="99%" style="height:100%;" scrolling="no"  frameborder="0"></iframe>');
-			$('#preview-frame').css({
-				'height': $(window).height()-10+'px'
-			});
+			$('body').prepend('<div id="preview-overlay"></div><iframe id="preview-frame" src="'+$(link).attr('href')+'" width="100%" height="100%" scrolling="no"  frameborder="0"></iframe>');
 		});
 	});
 

@@ -10,15 +10,22 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <?= HTML::style('assets/css/style.css'); ?>
 
+  <style type="text/css">
+  	img {
+  		position:absolute;
+  		top:50%;
+  		left:50%;
+  		margin-left:-<?= $size[0] / 2 ?>px;
+  		margin-top:-<?= $size[1] / 2 ?>px;
+  	}
+  </style>
+
 </head>
 
 <body>
 	
-    <div id="preview" class="img" style="margin-left:-<?= $size[0] / 2 ?>px;margin-top:-<?= $size[1] / 2 ?>px;">
     	
-    	<img src="<?= $src ?>" />
-
-	</div>
+    <img src="<?= $src ?>" width="<?= $size[0] ?>" height="<?= $size[1] ?>" />
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="<?= url::base(); ?>assets/js/libs/jquery-1.7.1.min.js"><\/script>')</script>
