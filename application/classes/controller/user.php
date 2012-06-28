@@ -82,7 +82,7 @@ class Controller_User extends Controller_Template {
 					'name' => $role->name,
 					'selected' => ! empty($user_roles[$role->name]) ? TRUE : FALSE,
 					'description' => $role->description,
-					'disabled' => in_array($user_to_be_edited->facebook_id, (array) Kohana::$config->load('admins')) ? TRUE : FALSE,
+					'disabled' => in_array($user_to_be_edited->facebook_id, (array) Kohana::$config->load('facebook.admins')) ? TRUE : FALSE,
 				);
 			}
 		}
@@ -92,7 +92,7 @@ class Controller_User extends Controller_Template {
 			try {
 				if(Auth::instance()->logged_in('admin'))
 				{
-					if( ! in_array($user_to_be_edited->facebook_id, (array) Kohana::$config->load('admins')))
+					if( ! in_array($user_to_be_edited->facebook_id, (array) Kohana::$config->load('facebook.admins')))
 					{	
 						$selected_roles = ! empty($_POST['roles']) ? array_keys($_POST['roles']) : array();
 
@@ -168,7 +168,7 @@ class Controller_User extends Controller_Template {
 						)
 					);
 
-					if(in_array($user->facebook_id, (array) Kohana::$config->load('admins')))
+					if(in_array($user->facebook_id, (array) Kohana::$config->load('facebook.admins')))
 					{
 						$user->add('roles', array(1, 2));
 					}				

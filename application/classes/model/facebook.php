@@ -21,8 +21,8 @@ class Model_Facebook
 		// Do class setup
 		$this->_facebook = new Facebook(
 			array(
-				'appId'  => Kohana::$config->load('facebook.id'),
-				'secret' => Kohana::$config->load('facebook.secret'),
+				'appId'  => Kohana::$config->load('facebook.app.id'),
+				'secret' => Kohana::$config->load('facebook.app.secret'),
 			)
 		);
 
