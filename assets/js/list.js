@@ -424,7 +424,8 @@ EntryView = Backbone.View.extend({
      */
     onModelNotification: function (message) {
         new PopUp({
-            message: message
+            message: message,
+            target: this.el
         });
 
         return this;
@@ -646,7 +647,7 @@ ListView = Backbone.View.extend({
             },
             success: function(c, r) {
                 if(r.length === 0)
-                    $('.append-more-entries', that.el).html('No more entries!').delay(1000).fadeOut();
+                    $('.append-more-entries', that.el).html('No more entries!').delay(300).fadeOut();
             },
             error: function(c,r) {
                 new AnError({
@@ -673,7 +674,8 @@ PopUp = Backbone.View.extend({
      * @constructs
      */
     initialize: function () {
-        $('#wrap').after(this.el);
+        $('#wrap').before(this.el);
+
         $(this.el).addClass('popup');
         this.render();
     },
@@ -684,8 +686,14 @@ PopUp = Backbone.View.extend({
      * @return {Error}
      */
     render: function () {
-        var that = this;
-        $(this.el).html(that.template(this));
+        $(this.el).html(this.template(this));
+
+        if(this.options.target !== 'undefined') {
+            $(this.el).css({
+                top: ($(this.options.target).position().top + $(this.options.target).outerHeight() / 2) - ($(this.el).height()) + 'px',
+                left: ($(this.options.target).position().left + $(this.options.target).outerWidth() / 2) + 'px'
+            });
+        }
 
         return this;
     },
