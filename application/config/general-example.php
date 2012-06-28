@@ -2,5 +2,5 @@
 
 // Give it a title.
 return array(
-	'title' => 'File Transporter MEGA-X 2000 4k',
+	'title' => 'File Sharer MEGA-X 2000 4k',
 );
