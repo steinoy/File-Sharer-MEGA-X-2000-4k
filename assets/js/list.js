@@ -11,13 +11,13 @@ jQuery(document).ready(function($) {
 
     for (var i = _loadedEntries.models.length - 1; i >= 0; i--) {
         entries.push(new EntryModel(_loadedEntries.models[i]));
-    };
+    }
 
     _list.entries.add(entries);
 
     if(_loadedEntries.more) {
         $('.append-more-entries', this.el).show();
-    }    
+    }
 });
 
 /**
@@ -92,12 +92,10 @@ EntryModel = Backbone.Model.extend({
             this.uploadFiles(errorCallback, xhrCallback, filesToExclude);
 
             return this;
-        } else {
-            var file = this.files[0];
         }
         
         var formData = new FormData();
-        formData.append(file.name, file);
+        formData.append(this.files[0].name, this.files[0]);
 
         this.xhr = $.ajax({
             url: _settings.siteURI+'upload/files/'+this.get('id'),
@@ -221,7 +219,7 @@ EntryView = Backbone.View.extend({
                 toBeDeleted: ($.inArray(this.model.files[i].name, attrs.deleteList) !== -1) ? true : false,
                 uploaded: false
             });
-        };
+        }
         
         for (var i = 0; i < attrs.fileNames.length; i++) {
             attrs.filesMarkup += this.fileTemplate({
@@ -229,7 +227,7 @@ EntryView = Backbone.View.extend({
                 toBeDeleted: ($.inArray(attrs.fileNames[i], attrs.deleteList) !== -1) ? true : false,
                 uploaded: true
             });
-        };
+        }
 
         attrs.uploading = this.model.uploading;
 
@@ -251,7 +249,7 @@ EntryView = Backbone.View.extend({
 
         for (var i = that.model.files.length - 1; i >= 0; i--) {
             totalFilesSize += that.model.files[i].size;
-        };
+        }
 
         this.model.save(
             {
@@ -537,7 +535,7 @@ ListView = Backbone.View.extend({
             },
 
             drop: function(evt) {
-                that.handleDrop(evt.originalEvent);
+                that.handleFilesFromDropbox(evt.originalEvent);
                 $(this).removeClass('hover');
             }
         });
@@ -590,14 +588,14 @@ ListView = Backbone.View.extend({
      * @return {ListView}
      */
     handleFilesFromDropbox: function() {
-        
+        this.newEntry(evt.target.files);
         return this;
     },
 
     /**
      * Add a new entry.
      * 
-     * @param {FileList} files Files to be uploaded 
+     * @param {FileList} files Files to be uploaded
      * @return {ListView}
      */
     newEntry: function (files) {
@@ -676,7 +674,7 @@ PopUp = Backbone.View.extend({
      */
     initialize: function () {
         $('#wrap').after(this.el);
-        $(this.el).addClass('popup')
+        $(this.el).addClass('popup');
         this.render();
     },
 
