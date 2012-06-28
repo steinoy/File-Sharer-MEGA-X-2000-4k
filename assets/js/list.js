@@ -57,7 +57,9 @@ EntryModel = Backbone.Model.extend({
             var file = files[i];
             if( ! _.isNumber(file) && ! _.isFunction(file) ) {
                 if(file.size > _settings.maxSize) {
-                    this.trigger('error', file.name+' is too big! Filesize exceeds the limit set by server.');
+                    this.trigger('notification', 'File excluded: '+file.name+' is too big! Filesize exceeds the limit set by server.');
+                } else if($.inArray(file.name.split('.').pop(), _settings.allowedExtensions) === -1) {
+                    this.trigger('notification', 'File excluded: '+file.name+'. File extension not allowed.');
                 } else {
                     newFiles.push(file);
                 }
@@ -98,7 +100,7 @@ EntryModel = Backbone.Model.extend({
         formData.append(this.files[0].name, this.files[0]);
 
         this.xhr = $.ajax({
-            url: _settings.siteURI+'upload/files/'+this.get('id'),
+            url: _settings.baseURL+'upload/files/'+this.get('id'),
             data: formData,
             cache: false,
             contentType: false,
@@ -184,7 +186,7 @@ EntryView = Backbone.View.extend({
     initialize: function () {
         this.model.bind('change', this.render, this);
         this.model.bind('destroy', this.onModelDestroy, this);
-        this.model.bind('error', this.onModelError, this);
+        this.model.bind('notification', this.onModelNotification, this);
 
         // Add hover classes, CSS :hover leaves it in hover state on close.
         $(this.el).bind({
@@ -237,7 +239,7 @@ EntryView = Backbone.View.extend({
     },
 
     /**
-     * Save the model.
+     * Save the model and start file upload.
      * 
      * @return {EntryView}
      */
@@ -415,12 +417,12 @@ EntryView = Backbone.View.extend({
     },
 
     /**
-     * Callback for when model triggers an error.
-     * Display the error message to the user.
+     * Callback for when model triggers an notification.
+     * Display the notification to the user.
      * 
      * @return {EntryView}
      */
-    onModelError: function (message) {
+    onModelNotification: function (message) {
         new PopUp({
             message: message
         });
@@ -467,7 +469,7 @@ EntryView = Backbone.View.extend({
  */
 EntryCollection = Backbone.Collection.extend({
 
-    url: _settings.siteURI+'entry/',
+    url: _settings.baseURL+'entry/',
 
     view: null,
 

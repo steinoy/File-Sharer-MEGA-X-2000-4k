@@ -64,10 +64,11 @@
 			?>
 
 			_settings = {
-				siteURI: '<?= url::site('/'); ?>',
+				baseURL: '<?= url::site('/'); ?>',
 				facebook: {
 					id: <?= Kohana::$config->load('facebook.app.id'); ?>
 				},
+				allowedExtensions: <?= json_encode( (array) Kohana::$config->load('allowed_extensions')); ?>,
 				maxSize: <?= $max_size; ?>
 			};
 
