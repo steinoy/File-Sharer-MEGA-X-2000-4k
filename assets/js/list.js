@@ -4,7 +4,6 @@ _.templateSettings = {
 };
 
 jQuery(document).ready(function($) {
-
     _list = new ListView();
     $('#wrap').append(_list.el);
 
@@ -16,9 +15,9 @@ jQuery(document).ready(function($) {
 
     _list.entries.add(entries);
 
-    if(_loadedEntries.more)
+    if(_loadedEntries.more) {
         $('.append-more-entries', this.el).show();
-    
+    }    
 });
 
 /**
@@ -217,29 +216,17 @@ EntryView = Backbone.View.extend({
         attrs.filesMarkup = '';
 
         for (var i = this.model.files.length - 1; i >= 0; i--) {
-            if($.inArray(this.model.files[i].fileName, attrs.deleteList) != -1) {
-                var toDelete = true;
-            } else {
-                var toDelete = false;
-            }
-
             attrs.filesMarkup += this.fileTemplate({
                 fileName : this.model.files[i].name,
-                toBeDeleted: toDelete,
+                toBeDeleted: ($.inArray(this.model.files[i].name, attrs.deleteList) !== -1) ? true : false,
                 uploaded: false
             });
         };
         
-        for (var i=0; i < attrs.fileNames.length; i++) {
-            if($.inArray(attrs.fileNames[i], attrs.deleteList) != -1) {
-                var toDelete = true;
-            } else {
-                var toDelete = false;
-            }
-
+        for (var i = 0; i < attrs.fileNames.length; i++) {
             attrs.filesMarkup += this.fileTemplate({
                 fileName : attrs.fileNames[i],
-                toBeDeleted: toDelete,
+                toBeDeleted: ($.inArray(attrs.fileNames[i], attrs.deleteList) !== -1) ? true : false,
                 uploaded: true
             });
         };
@@ -275,7 +262,7 @@ EntryView = Backbone.View.extend({
                 success: function(model, response) {
                     that.model.uploadFiles(
                         function(err) {
-                            new Error({
+                            new ErrorOfNoReturn({
                                 message: err
                             });
                         },
@@ -302,7 +289,7 @@ EntryView = Backbone.View.extend({
                     that.render();
                 },
                 error: function (model, response) {
-                    new Error({
+                    new ErrorOfNoReturn({
                         message: response.responseText
                     });
                 }
@@ -493,7 +480,7 @@ EntryCollection = Backbone.Collection.extend({
      */
     initialize: function (options) {
 
-    },
+    }
 }); // End EntryCollection
 
 /**
@@ -636,7 +623,7 @@ ListView = Backbone.View.extend({
             model: model
         });
 
-        if(model.get('published') == '0%') { // New entry
+        if(model.get('published') === '0%') { // New entry
             $('#list-entries').prepend(newEntryView.el);
             $(newEntryView.el).click();
         } else { // Existing entry
@@ -664,7 +651,7 @@ ListView = Backbone.View.extend({
                     $('.append-more-entries', that.el).html('No more entries!').delay(1000).fadeOut();
             },
             error: function(c,r) {
-                new Error({
+                new AnError({
                     message: r.responseText
                 });
             }
@@ -710,7 +697,7 @@ PopUp = Backbone.View.extend({
     }
 });
 
-Error = Backbone.View.extend({
+ErrorOfNoReturn = Backbone.View.extend({
     
     tagName: 'section',
 
@@ -733,6 +720,7 @@ Error = Backbone.View.extend({
         });
 
         this.render();
+        throw this.message;
     },
 
     /**
