@@ -1,3 +1,8 @@
+# Force browser to download the files
 <FilesMatch "\.*$">
   Header set Content-Disposition attachment
 </FilesMatch>
+
+# Make sure nothing executes in this directory
+AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi
+Options -ExecCGI
